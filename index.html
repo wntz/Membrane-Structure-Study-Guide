@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membrane Structure — Interactive Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A2540;--teal:#0F7B6C;--teal-light:#E6F5F2;--gold:#D4A017;--gold-light:#FFF8E7;--gold-border:rgba(212,160,23,.3);--red:#C0392B;--red-light:#FDEDEC;--green:#1E8449;--green-light:#E8F8F0;--purple:#7C3AED;--purple-light:#F3EEFF;--gray-50:#F8F9FA;--gray-100:#F0F2F4;--gray-200:#E2E5E9;--gray-300:#C8CDD3;--gray-500:#6B7280;--gray-700:#374151;--gray-900:#111827;--white:#FFF;--shadow-sm:0 1px 3px rgba(10,37,64,.08);--shadow-md:0 4px 12px rgba(10,37,64,.1);--r:10px;--r-lg:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6;min-height:100vh}
+.header{background:var(--navy);color:var(--white);padding:1.75rem 2rem 1.25rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(10,37,64,.3)}
+.header-inner{max-width:960px;margin:0 auto}
+.header-course{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.2rem}
+.header h1{font-family:'Source Serif 4',serif;font-size:1.5rem;font-weight:700;margin-bottom:.6rem}
+.header .welcome-name{font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:.5rem}
+.progress-track{background:rgba(255,255,255,.15);border-radius:100px;height:8px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,var(--teal),#2DD4A8);height:100%;border-radius:100px;transition:width .5s;width:0%}
+.progress-label{font-size:.72rem;color:rgba(255,255,255,.55);margin-top:.3rem;display:flex;justify-content:space-between}
+.nav-tabs{max-width:960px;margin:0 auto;padding:.75rem 1.5rem 0;display:flex;gap:4px}
+.nav-tab{padding:.5rem 1.1rem;font-size:.82rem;font-weight:600;color:var(--gray-500);cursor:pointer;border-radius:8px 8px 0 0;transition:all .2s;border:1px solid transparent;border-bottom:none}
+.nav-tab:hover{color:var(--navy)}.nav-tab.active{background:var(--white);color:var(--navy);border-color:var(--gray-200)}
+.main{max-width:960px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.login-screen{text-align:center;padding:80px 24px;max-width:480px;margin:0 auto}
+.login-screen h1{font-family:'Source Serif 4',serif;font-size:1.8rem;color:var(--navy);margin-bottom:4px}
+.login-sub{color:var(--teal);font-size:.88rem;font-weight:500;margin-bottom:20px}
+.login-desc{color:var(--gray-500);font-size:.85rem;margin-bottom:24px;line-height:1.5}
+.login-input{font-family:'DM Sans',sans-serif;font-size:1rem;background:var(--white);border:2px solid var(--gray-200);border-radius:var(--r);padding:12px 18px;color:var(--gray-900);width:280px;text-align:center;transition:border-color .2s}
+.login-input:focus{outline:none;border-color:var(--teal)}
+.login-btn{font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;background:var(--teal);color:var(--white);border:none;border-radius:var(--r);padding:12px 28px;cursor:pointer;margin-top:12px;transition:background .2s}
+.login-btn:hover{background:#0a6b5e}
+.login-link{font-size:.78rem;color:var(--gray-500);margin-top:20px;cursor:pointer;text-decoration:underline}.login-link:hover{color:var(--teal)}
+.intro-card{background:var(--white);border-radius:var(--r-lg);padding:1.75rem;margin-bottom:1.75rem;box-shadow:var(--shadow-sm);border-left:4px solid var(--teal)}
+.intro-card h2{font-family:'Source Serif 4',serif;font-size:1.15rem;margin-bottom:.4rem;color:var(--navy)}
+.intro-card p{color:var(--gray-500);font-size:.9rem}
+.section-divider{font-family:'Source Serif 4',serif;font-size:1.05rem;font-weight:600;color:var(--navy);margin:1.75rem 0 .75rem;padding:.5rem 0;border-bottom:2px solid var(--gray-200)}
+.section-badge{font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:100px;margin-right:.4rem}
+.section-badge.struct{background:#E8F8F0;color:var(--green)}.section-badge.mech{background:var(--teal-light);color:var(--teal)}.section-badge.comp{background:var(--gold-light);color:var(--gold)}.section-badge.clinical{background:var(--red-light);color:var(--red)}.section-badge.spiro{background:var(--purple-light);color:var(--purple)}
+.cp{background:var(--white);border-radius:var(--r-lg);margin-bottom:1.25rem;box-shadow:var(--shadow-sm);overflow:hidden;transition:all .3s;border-left:4px solid transparent}
+.cp:hover{box-shadow:var(--shadow-md)}.cp.done{border-left-color:var(--green)}.cp.done-bad{border-left-color:var(--red)}.cp.active-cp .cp-icon{background:var(--teal);color:var(--white)}.cp.done .cp-icon{background:var(--green);color:var(--white)}.cp.done-bad .cp-icon{background:var(--red);color:var(--white)}
+.cp-head{padding:1.1rem 1.25rem;cursor:pointer;display:flex;align-items:center;gap:.9rem;user-select:none;transition:background .2s}
+.cp-head:hover{background:var(--gray-50)}
+.cp-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0;background:var(--gray-100);color:var(--gray-500);transition:all .3s}
+.cp-meta{flex:1}.cp-slides{font-size:.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-500)}
+.cp-title{font-family:'Source Serif 4',serif;font-weight:600;font-size:1.05rem;color:var(--navy)}
+.badge-hy{display:inline-block;background:var(--gold-light);color:var(--gold);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:100px;border:1px solid var(--gold-border);margin-left:.4rem;vertical-align:middle}
+.lo-tag{display:inline-block;background:var(--teal-light);color:var(--teal);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:100px;margin-left:.4rem;vertical-align:middle}
+.review-tag{display:inline-block;background:var(--red-light);color:var(--red);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:100px;margin-left:.4rem;vertical-align:middle}
+.chevron{color:var(--gray-300);transition:transform .3s;font-size:1.1rem;flex-shrink:0}.cp.open .chevron{transform:rotate(180deg)}
+.cp-body{display:none;padding:0 1.25rem 1.25rem}.cp.open .cp-body{display:block}
+.cp-body hr{border:none;border-top:1px solid var(--gray-200);margin:0 0 1rem}
+.q-type{font-size:.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-500);margin-bottom:.3rem}
+.q-type.concept{color:var(--teal)}.q-type.scenario{color:var(--purple)}.q-type.calc{color:var(--gold)}
+.q-prompt{font-size:.95rem;font-weight:500;color:var(--navy);margin-bottom:.6rem;line-height:1.45}
+/* Predict box */
+.predict-box{background:var(--gray-50);border:2px dashed var(--gray-300);border-radius:var(--r);padding:1rem;margin-bottom:1rem;text-align:center}
+.predict-box p{font-size:.88rem;color:var(--gray-700);margin-bottom:.5rem}
+.predict-input{font-family:'DM Sans',sans-serif;font-size:.85rem;width:100%;padding:.5rem .75rem;border:1px solid var(--gray-200);border-radius:6px;background:var(--white);color:var(--gray-900);min-height:50px;resize:vertical;margin-bottom:.5rem}
+.predict-input:focus{outline:none;border-color:var(--teal)}
+.predict-reveal-btn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:var(--teal);color:var(--white);border:none;border-radius:var(--r);padding:8px 18px;cursor:pointer}
+.predict-reveal-btn:hover{background:#0a6b5e}
+.question-area{display:none}
+.question-area.revealed{display:block;animation:fadeIn .3s}
+/* MC */
+.mc-opts{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.5rem}
+.mc-opt{display:flex;align-items:center;gap:.65rem;padding:.65rem .9rem;background:var(--gray-50);border:2px solid var(--gray-200);border-radius:var(--r);cursor:pointer;transition:all .2s;font-size:.9rem}
+.mc-opt:hover:not(.locked){border-color:var(--teal);background:var(--teal-light)}.mc-opt.locked{cursor:default;opacity:.7}.mc-opt.locked.is-correct{opacity:1}
+.mc-opt.is-correct{border-color:var(--green);background:var(--green-light)}.mc-opt.is-wrong{border-color:var(--red);background:var(--red-light)}
+.mc-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700}
+.mc-opt.is-correct .mc-dot{border-color:var(--green);color:var(--green)}.mc-opt.is-correct .mc-dot::after{content:'\2713'}
+.mc-opt.is-wrong .mc-dot{border-color:var(--red);color:var(--red)}.mc-opt.is-wrong .mc-dot::after{content:'\2717'}
+/* Fill */
+.fill-area{width:100%;min-height:70px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .85rem;border:2px solid var(--gray-200);border-radius:var(--r);background:var(--white);color:var(--gray-900);resize:vertical;line-height:1.45}.fill-area:focus{outline:none;border-color:var(--teal)}.fill-area:disabled{background:var(--gray-50);opacity:.7}
+/* Calc */
+.calc-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:.5rem}
+.calc-input{font-family:'JetBrains Mono',monospace;font-size:.95rem;background:var(--white);border:2px solid var(--gray-200);border-radius:var(--r);padding:8px 12px;color:var(--gray-900);width:150px;text-align:center}.calc-input:focus{outline:none;border-color:var(--teal)}.calc-unit{font-size:.8rem;color:var(--gray-500)}
+.formula-box{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--purple);background:var(--purple-light);border:1px solid rgba(124,58,237,.15);border-radius:var(--r);padding:.6rem 1rem;margin:.6rem 0;text-align:center}
+/* Drill - FIXED STACKING */
+.drill-table{width:100%;border-collapse:collapse;margin-bottom:.5rem;font-size:.85rem}
+.drill-table th{background:var(--navy);color:var(--white);padding:.5rem .6rem;font-size:.7rem;font-weight:600;text-align:left;letter-spacing:.5px}
+.drill-table td{padding:.45rem .6rem;border-bottom:1px solid var(--gray-200);vertical-align:middle}
+.drill-table tr:nth-child(even) td{background:var(--gray-50)}
+.drill-sel{font-family:'DM Sans',sans-serif;font-size:.8rem;background:var(--white);border:2px solid var(--gray-200);border-radius:6px;padding:4px 6px;color:var(--gray-900);cursor:pointer;width:100%}
+.drill-sel:focus{outline:none;border-color:var(--teal)}.drill-sel:disabled{opacity:.7;cursor:default}
+.drill-sel.ok{border-color:var(--green);color:var(--green);background:var(--green-light)}
+.drill-sel.no{border-color:var(--red);color:var(--red);background:var(--red-light)}
+/* TF */
+.tf-row{display:flex;align-items:flex-start;gap:8px;background:var(--gray-50);border-radius:6px;padding:8px 10px;margin-bottom:5px;font-size:.85rem}
+.tf-text{flex:1;color:var(--gray-700)}.tf-btns{display:flex;gap:3px;flex-shrink:0}
+.tf-btn{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;border:2px solid var(--gray-200);background:var(--white);color:var(--gray-700);transition:all .15s}
+.tf-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal)}.tf-btn:disabled{cursor:default;opacity:.7}
+.tf-btn.ok{border-color:var(--green);background:var(--green-light);color:var(--green)}.tf-btn.no{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1.1rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--teal);color:var(--white)}.btn-primary:hover{background:#0a6b5e}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700)}.btn-secondary:hover{background:var(--gray-200)}
+.btn:disabled{opacity:.4;cursor:default}.btn-row{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap}
+.fb{padding:.75rem .9rem;border-radius:var(--r);font-size:.88rem;line-height:1.5;display:none;margin-top:.5rem}
+.fb.show{display:block;animation:fadeIn .3s}
+.fb.correct{background:var(--green-light);border-left:3px solid var(--green);color:var(--green)}
+.fb.incorrect{background:var(--red-light);border-left:3px solid var(--red);color:var(--red)}
+.fb.info{background:var(--teal-light);border-left:3px solid var(--teal);color:var(--navy)}
+.fb.partial{background:var(--gold-light);border-left:3px solid var(--gold);color:#8B6914}
+.model-answer{background:var(--teal-light);border-left:3px solid var(--teal);border-radius:var(--r);padding:.75rem .9rem;font-size:.88rem;color:var(--navy);margin-top:.5rem;display:none;line-height:1.5}
+.model-answer.show{display:block;animation:fadeIn .3s}
+.self-rate{margin-top:.5rem;display:none;font-size:.82rem;color:var(--gray-500)}.self-rate.show{display:block}
+.score-card{background:var(--navy);color:var(--white);border-radius:var(--r-lg);padding:1.75rem;text-align:center;margin-top:1.5rem;display:none}
+.score-card h2{font-family:'Source Serif 4',serif;font-size:1.4rem;margin-bottom:.4rem}
+.score-big{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;color:#2DD4A8;margin:.4rem 0}
+.score-detail{color:rgba(255,255,255,.55);font-size:.85rem}
+.hist-card{background:var(--white);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.hist-date{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:.3rem}
+.hist-score{font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.hist-dots{display:flex;gap:3px;flex-wrap:wrap}.hist-dot{width:18px;height:18px;border-radius:4px;font-size:.55rem;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--white)}
+.hist-dot.y{background:var(--green)}.hist-dot.n{background:var(--red)}.hist-dot.p{background:var(--gold)}
+.hist-themes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:.75rem}
+.hist-th{background:var(--gray-50);border-radius:6px;padding:6px 8px;font-size:.75rem}
+.hist-th-label{color:var(--gray-500);font-size:.65rem}.hist-th-score{color:var(--navy);font-weight:700;font-family:'JetBrains Mono',monospace}
+.dash-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.dash-card{background:var(--white);border-radius:var(--r);padding:1rem;text-align:center;box-shadow:var(--shadow-sm)}
+.dash-num{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--teal)}.dash-label{font-size:.7rem;color:var(--gray-500);margin-top:2px}
+.dash-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--gray-200);margin-top:.75rem}
+.dash-table th{background:var(--navy);color:var(--white);padding:.55rem .75rem;font-size:.72rem;font-weight:600;text-align:left}
+.dash-table td{padding:.55rem .75rem;border-bottom:1px solid var(--gray-200);font-size:.85rem}
+.dash-table tr:last-child td{border-bottom:none}.dash-table tr:nth-child(even) td{background:var(--gray-50)}
+.pass-bar{height:8px;background:var(--gray-100);border-radius:4px;overflow:hidden;min-width:70px}
+.pass-fill{height:100%;border-radius:4px}.pass-fill.good{background:var(--green)}.pass-fill.mid{background:var(--gold)}.pass-fill.bad{background:var(--red)}
+.empty-state{text-align:center;color:var(--gray-500);padding:60px 0;font-size:.9rem}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.header h1{font-size:1.2rem}.main{padding:1rem}.cp-head{padding:.85rem}.cp-body{padding:0 .85rem .85rem}}
+/* Keep headers clear of the sticky top bar when auto-scrolled */
+.cp,.score-card{scroll-margin-top:175px}
+/* End-of-guide summary */
+.sum-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;color:#2DD4A8;line-height:1;margin-top:.4rem}
+.sum-score span{color:rgba(255,255,255,.4);font-size:1.4rem}
+.sum-pct{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:.5rem}
+.sum-heading{text-align:left;font-family:'Source Serif 4',serif;font-size:.95rem;font-weight:600;color:#fff;margin:1.5rem 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid rgba(255,255,255,.15)}
+.sum-sec{text-align:left;margin-bottom:.7rem}
+.sum-sec-top{display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.85);margin-bottom:.28rem}
+.sum-sec-score{font-family:'JetBrains Mono',monospace;font-weight:700}
+.sum-bar{height:7px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden}
+.sum-bar-fill{height:100%;border-radius:4px}
+.sum-bar-fill.good{background:#2DD4A8}.sum-bar-fill.mid{background:#F0C14B}.sum-bar-fill.bad{background:#F87171}
+.sum-miss{text-align:left;background:rgba(255,255,255,.06);border-left:3px solid #F87171;border-radius:8px;padding:.7rem .9rem;margin-bottom:.5rem}
+.sum-miss-title{font-weight:600;font-size:.85rem;color:#fff;margin-bottom:.25rem}
+.sum-miss-key{font-size:.82rem;color:rgba(255,255,255,.72);line-height:1.5}
+.sum-allright{text-align:center;color:#2DD4A8;font-weight:600;padding:.5rem 0}
+.sum-actions{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+/* Resume banner */
+.resume-banner{background:linear-gradient(135deg,var(--teal-light),#fff);border:1px solid var(--teal);border-radius:var(--r-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.resume-banner>div:first-child{font-size:.9rem;color:var(--gray-700)}.resume-banner strong{color:var(--navy)}
+.resume-actions{display:flex;gap:.5rem;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="mainApp">
+<div class="header"><div class="header-inner">
+  <div class="header-course">Cell Biology — Plasma Membrane</div>
+  <h1>Membrane Structure — Interactive Study Guide</h1>
+  <div class="progress-track"><div class="progress-fill" id="pf"></div></div>
+  <div class="progress-label"><span id="progText">0 of 31 checkpoints complete</span><span id="progPct">0%</span></div>
+</div></div>
+<div class="main">
+  <div class="intro-card"><h2>How the Study Guide Works</h2><p>Work through each checkpoint after the lecture. This study guide deliberately blends formats the way learning science recommends: <strong>free-recall cards</strong> build the core facts, <strong>multiple-choice items</strong> sharpen the distinctions students most often confuse, <strong>matching drills</strong> organize related concepts, and it closes with <strong>board-style clinical vignettes</strong> and a rapid-fire True/False review. Always try to answer from memory <em>before</em> revealing — that active retrieval is what builds durable knowledge. Sections marked <span class="badge-hy" style="vertical-align:baseline">High Yield</span> are core, heavily-tested concepts. On a repeat pass, checkpoints you missed are surfaced first for priority review.</p></div>
+  <div id="cpContainer"></div>
+  <div class="score-card" id="scoreCard"><h2>Study Guide Complete!</h2><div id="summaryBody"></div><div class="sum-actions"><button class="btn btn-primary" style="background:#2DD4A8;color:var(--navy)" onclick="restartMod()">Retry — missed items first</button><button class="btn" style="background:rgba(255,255,255,.15);color:#fff" onclick="restartFresh()">Start over</button></div></div>
+</div></div>
+
+<script>
+const Q=[
+// LIPID STRUCTURE & CHEMISTRY
+{id:1,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #2",title:"Phosphoglyceride Components",hy:1,type:"fill",q:"What are the three main structural components of phosphoglycerides?",answer:"A glycerol backbone, two long-chain fatty acids, and a phosphate (phosphoric acid) head group — the head group being a phosphate plus an attached alcohol."},
+{id:2,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #2",title:"Phosphoglyceride Charge Source",hy:1,type:"fill",q:"What portion of a phosphoglyceride molecule determines its net charge?",answer:"The charge of the alcohol (head) group attached to the phosphate — since the phosphate itself is always negative, it's the alcohol group that sets the molecule's overall net charge."},
+{id:3,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #2 ★",title:"Phosphoglyceride Head Groups & Charge",hy:1,type:"drill",drillType:"compliance",headers:["Phosphoglyceride","Net Charge"],dqLabel:"Charge Classification",q:"Match each phosphoglyceride to its net charge:",rows:[{label:"Phosphatidic acid (PA) — no alcohol head group",ans:"negative"},{label:"Phosphatidylethanolamine (PE) — ethanolamine head group",ans:"neutral"},{label:"Phosphatidylcholine (PC) — choline head group",ans:"neutral"},{label:"Phosphatidylserine (PS) — serine head group",ans:"negative"},{label:"Phosphatidylinositol (PI) — inositol head group",ans:"negative"}],cOpts:["negative","neutral"],cLbls:{negative:"Negative",neutral:"Neutral"},fb:"PA (no head group) exposes the phosphate → negative. PE and PC carry neutral head groups. PS and PI carry negative head groups. Rule: the net charge always follows the alcohol group, never the always-negative phosphate."},
+{id:4,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #4",title:"Why Phospholipids Are Amphipathic",hy:1,type:"fill",q:"Why are phospholipids considered amphipathic?",answer:"Because they contain both a hydrophilic region (the phosphate head group) and a hydrophobic region (the fatty acid tails)."},
+{id:5,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #4",title:"Amphipathic Nature → Bilayer Formation",hy:1,type:"fill",q:"How does the amphipathic nature of phospholipids cause them to organize when placed in water?",answer:"They spontaneously form a bilayer, with the hydrophobic fatty acid tails facing inward away from water and the hydrophilic head groups facing the surrounding water on both surfaces."},
+{id:6,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #5",title:"Saturated vs. Unsaturated Structure",hy:1,type:"fill",q:"What is the structural difference between a saturated and an unsaturated fatty acid?",answer:"A saturated fatty acid has only single bonds between its carbons (each carbon carrying its full complement of hydrogens), giving a straight tail. An unsaturated fatty acid has one or more C=C double bonds, each producing a bend (kink) in the tail."},
+{id:7,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #5 ★",title:"Fatty Acid Saturation & Fluidity",hy:1,type:"mc",q:"Increasing the proportion of UNSATURATED fatty acids in a membrane will most likely:",opts:["Make the membrane more rigid","Have no effect on membrane fluidity","Make the membrane more fluid","Prevent the bilayer from forming"],correct:2,fb:"Unsaturated fatty acids have a kink (from the C=C double bond) that prevents tight packing, so the membrane becomes MORE fluid. Saturated tails pack closely and stiffen it. Students often reverse this — anchor it: kinks = can't pack = fluid."},
+{id:8,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #2",title:"Sphingolipids & Sphingomyelin",hy:0,type:"fill",q:"What backbone do sphingolipids use instead of glycerol, and what is the most common sphingolipid made of?",answer:"Sphingolipids use sphingosine (an amino alcohol) in place of glycerol. Sphingomyelin — the most common sphingolipid — is composed of sphingosine, a fatty acid, and a phosphoric acid head group (phosphocholine or phosphoethanolamine)."},
+{id:9,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #2",title:"Glycosphingolipids",hy:0,type:"mc",q:"What distinguishes a glycosphingolipid from other sphingolipids?",opts:["It carries a carbohydrate chain facing the extracellular space","It uses glycerol instead of sphingosine","It carries a net positive charge","It is found only on the inner leaflet"],correct:0,fb:"Glycosphingolipids carry a carbohydrate (sugar) chain facing the extracellular environment in place of a phosphate head group, making them a type of glycolipid."},
+{id:10,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #3",title:"Cholesterol Orientation",hy:0,type:"mc",q:"How is cholesterol oriented within the lipid bilayer?",opts:["It fully spans both leaflets like a transmembrane protein","Its hydroxyl group points into the hydrophobic core","It sits entirely outside the bilayer","Its hydroxyl group faces the hydrophilic membrane surface"],correct:3,fb:"Cholesterol inserts toward the center of the bilayer, but its single polar hydroxyl group orients toward the hydrophilic surface — its own small amphipathic character."},
+{id:11,sec:"Lipid Structure & Chemistry",stag:"struct",lo:"L.O. #3 ★",title:"Cholesterol's Roles",hy:1,type:"fill",q:"How does cholesterol affect a mostly-saturated membrane, and what major biological role does its structure support beyond the membrane?",answer:"In a mostly-saturated membrane, cholesterol stiffens (rigidifies) it — packing near the fatty acid chains lets lipids pack closer together and decreases small-molecule movement across the membrane. Beyond structure, cholesterol's steroid skeleton is the backbone for steroid hormones (e.g., estrogen, testosterone), vitamin D, and bile salts."},
+// MEMBRANE PROTEINS & DYNAMICS
+{id:12,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #6 ★",title:"Integral vs. Peripheral Proteins",hy:1,type:"mc",q:"Which statement correctly describes an INTEGRAL (transmembrane) protein?",opts:["It binds only to lipid head groups on one leaflet surface","It has a hydrophobic segment that passes completely through the bilayer","It is always attached to another protein rather than to lipids","It floats free and never contacts the fatty acid tails"],correct:1,fb:"Integral (transmembrane) proteins have a hydrophobic segment that fully spans the bilayer and interacts with the fatty acid tails. Peripheral proteins, by contrast, associate only with the surface/one leaflet or with other proteins — they do not span the membrane."},
+{id:13,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #6",title:"Peripheral Protein Associations",hy:1,type:"fill",q:"In what ways can a peripheral protein associate with the membrane?",answer:"By attaching to integral membrane proteins, containing acyl tails that insert into the membrane, inserting into only one leaflet of the bilayer, or binding directly to membrane lipids."},
+{id:14,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #8",title:"Phospholipid Movement Types",hy:0,type:"fill",q:"What three types of movement can phospholipids make within the membrane?",answer:"Spinning on their own axis, moving laterally within a leaflet, and flip-flopping from one leaflet to the other."},
+{id:15,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #8",title:"Protein Mobility vs. Lipid Mobility",hy:0,type:"fill",q:"How does protein mobility differ from lipid mobility in the membrane?",answer:"A protein's orientation doesn't change — its internal region always faces the cytosol. Proteins can move laterally (either unrestricted or via directed motion tethered to motor proteins on the cytoskeleton), or be restricted by cytoskeletal anchors or by transient confinement from other proteins."},
+{id:16,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #8",title:"Flippase vs. Floppase",hy:0,type:"mc",q:"Which option correctly pairs each transporter with the direction it moves lipids?",opts:["Flippase: inner → outer leaflet; Floppase: outer → inner leaflet","Both move lipids outer → inner","Flippase: outer → inner leaflet; Floppase: inner → outer leaflet","Both move lipids inner → outer"],correct:2,fb:"Flippase moves lipids from the outer leaflet to the inner leaflet; floppase does the reverse (inner → outer). Both require ATP. Mnemonic: fli-P points IN, flo-P points OUT."},
+{id:17,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #8",title:"Scramblase",hy:0,type:"mc",q:"Which feature is unique to scramblase among the lipid transporters?",opts:["It uses ATP to move lipids from outer → inner leaflet","It transports only cholesterol","It permanently locks lipids into one leaflet","It moves lipids bidirectionally without ATP, activated by calcium"],correct:3,fb:"Scramblase moves lipids bidirectionally and non-specifically, does NOT require ATP, and is typically activated by intracellular calcium — unlike the ATP-dependent flippase and floppase."},
+{id:18,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #7 ★",title:"Functions of Membrane Proteins",hy:1,type:"drill",drillType:"pft",headers:["Description","Functional Category"],dqLabel:"Function Classification",q:"Match each description to its functional category:",rows:[{label:"Binds a specific extracellular ligand and triggers an intracellular signaling cascade",ans:"receptor"},{label:"Uses ATP to move a substance against its concentration gradient",ans:"transporter"},{label:"Allows passive flow of a substance down its concentration gradient",ans:"transporter"},{label:"Physically links the cell to the extracellular matrix or a neighboring cell",ans:"adhesion"}],pOpts:["receptor","transporter","adhesion"],pLbls:{receptor:"Receptor / Signaling",transporter:"Channel / Carrier / Pump",adhesion:"Adhesion Molecule"},fb:"Receptors bind ligands to start signaling cascades. Channels, carriers, and pumps all transport substances (channels passive, pumps ATP-driven against a gradient, carriers either way). Adhesion molecules physically anchor the cell to the ECM or neighbors. Note: a protein can span categories — integrins both adhere AND signal."},
+{id:19,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #7",title:"Channels vs. Carriers vs. Pumps",hy:0,type:"mc",q:"Which membrane transport protein uses ATP to move a substance AGAINST its concentration gradient?",opts:["Pump","Channel","Carrier","Receptor"],correct:0,fb:"Pumps use ATP to move substances against their gradient. Channels allow passive flow down a gradient; carriers transport or exchange substances across the membrane. Only the pump is actively powered against the gradient."},
+{id:20,sec:"Membrane Proteins & Dynamics",stag:"mech",lo:"L.O. #1",title:"Membrane Skeleton Function",hy:0,type:"fill",q:"What is the primary role of the membrane skeleton?",answer:"It supports the lipid bilayer and helps the plasma membrane maintain its shape — a network of fibrous proteins and integral membrane proteins, most extensively studied in red blood cells."},
+// MEMBRANE ORGANIZATION & SURFACE CHEMISTRY
+{id:21,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #9 ★",title:"Inner Leaflet Lipid Composition",hy:1,type:"fill",q:"Which phospholipids are concentrated on the inner leaflet of the plasma membrane?",answer:"Phosphatidylserine and phosphatidylinositol."},
+{id:22,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #9 ★",title:"Outer Leaflet Lipid Composition",hy:1,type:"fill",q:"Which phospholipids are concentrated on the outer leaflet of the plasma membrane?",answer:"Phosphatidylcholine and sphingomyelin (along with glycolipids)."},
+{id:23,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #9 ★",title:"Consequence of Lipid Asymmetry",hy:1,type:"mc",q:"Phosphatidylserine is concentrated on the inner leaflet. What is the main functional consequence of this?",opts:["It forms the extracellular carbohydrate coat","It helps establish the cell's resting membrane potential","It makes the outer leaflet more fluid","It anchors cholesterol into the bilayer"],correct:1,fb:"The negatively-charged phosphatidylserine concentrated on the inner (cytoplasmic) leaflet creates a net negative charge on that side, contributing to the resting membrane potential. (Inner-leaflet PI is also key for cell signaling.)"},
+{id:24,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #10",title:"Lipid Raft Composition",hy:0,type:"fill",q:"What are lipid rafts primarily composed of?",answer:"Glycosphingolipids and cholesterol."},
+{id:25,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #10 ★",title:"Lipid Raft Rigidity & Function",hy:1,type:"fill",q:"Why are lipid rafts more rigid than the surrounding membrane, and what is their functional significance?",answer:"Their high ratio of saturated fatty acids and increased cholesterol concentration let the molecules pack more closely, making rafts more rigid. Functionally, many cell-signaling proteins localize to lipid rafts, so rafts play an important role in signal transduction."},
+{id:26,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #10",title:"Caveolae",hy:0,type:"mc",q:"Caveolae, a specialized type of lipid raft, are identified by their association with which protein?",opts:["Clathrin","Spectrin","Integrin","Caveolin"],correct:3,fb:"Caveolae are rich in glycosphingolipids and cholesterol like other rafts, but are specifically distinguished by the protein caveolin. (Clathrin coats endocytic pits; spectrin is a membrane-skeleton protein; integrin is an adhesion receptor.)"},
+{id:27,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #11",title:"Glycocalyx Composition",hy:0,type:"mc",q:"What is the primary macromolecule of the glycocalyx?",opts:["Phospholipids","Cholesterol","Carbohydrates","Nucleic acids"],correct:2,fb:"The glycocalyx is a carbohydrate coat — sugars present as proteoglycans, or bound to lipids (glycolipids) or proteins (glycoproteins), facing the extracellular space."},
+{id:28,sec:"Membrane Organization & Surface Chemistry",stag:"comp",lo:"L.O. #11",title:"Glycocalyx Function",hy:0,type:"fill",q:"What are the main functions of the glycocalyx?",answer:"Cell recognition, cell-cell adhesion, and preservation of the cell's association with the extracellular matrix."},
+// CLINICAL CORRELATION
+{id:29,sec:"Clinical Correlation",stag:"clinical",lo:"L.O. #1 ★",title:"Hereditary Spherocytosis",hy:1,type:"mc",q:"A 12-year-old boy has fatigue and a hypochromic, microcytic anemia. His red blood cells appear spherical rather than biconcave. A defect in a protein of which structure is the most likely cause?",opts:["The lipid bilayer itself","The membrane skeleton (cytoskeletal network, e.g. spectrin)","The mitochondria","The nucleus"],correct:1,fb:"Hereditary spherocytosis results from defects in membrane-skeleton proteins such as spectrin and ankyrin that brace the RBC bilayer. Without this network the cell can't hold its biconcave shape and rounds into a sphere — which is exactly why the membrane skeleton is best studied in erythrocytes."},
+{id:30,sec:"Clinical Correlation",stag:"clinical",lo:"L.O. #11 ★",title:"Endothelial Glycocalyx & Vascular Function",hy:1,type:"mc",q:"Damage to the endothelial glycocalyx lining a patient's blood vessels would most directly lead to:",opts:["Increased vascular resistance and disturbed nitric oxide production","Decreased plasma membrane fluidity throughout the body","Loss of the mitochondrial membrane potential","Increased lipid flip-flop in red blood cells"],correct:0,fb:"A diminished endothelial glycocalyx is associated with increased vascular resistance and disturbed endothelial nitric oxide production — a link tied to heart failure. It shows the glycocalyx has an active role in vascular function, well beyond simply coating the cell."},
+// RAPID-FIRE REVIEW
+{id:31,sec:"Rapid-Fire Review",stag:"spiro",lo:"Mixed",title:"True/False Rapid Fire",hy:0,type:"tf",q:"True or False:",items:[
+  {text:"The primary components of the cell membrane are lipids and proteins.",ans:true,ex:"Correct — lipids and proteins are the two primary structural components of the membrane."},
+  {text:"Phosphoglycerides are amphipathic, which is a synonym for hydrophobic.",ans:false,ex:"Amphipathic means having both hydrophilic and hydrophobic regions, not purely hydrophobic."},
+  {text:"The phospholipid phosphatidylinositol has a net positive charge.",ans:false,ex:"The phosphate group is negative, giving phosphatidylinositol a net negative charge."},
+  {text:"Increasing the number of phospholipids containing unsaturated fatty acids in the cell membrane makes it stiffer.",ans:false,ex:"Unsaturated tails have kinks that prevent tight packing — this makes the membrane MORE fluid, not stiffer."},
+  {text:"Lipids are typically held in a fixed position within the lipid bilayer.",ans:false,ex:"Lipids are highly mobile — they can spin, diffuse laterally, and flip-flop between leaflets."},
+  {text:"Integral proteins span the lipid bilayer.",ans:true,ex:"Correct — integral (transmembrane) proteins have a hydrophobic segment that spans the entire bilayer."},
+  {text:"The distribution of lipids is typically constant between the inner and outer leaflets.",ans:false,ex:"Lipid distribution is asymmetric — different lipids predominate on the inner vs. outer leaflet."},
+  {text:"Cholesterol makes the membrane more rigid when the membrane contains mostly saturated fatty acids.",ans:true,ex:"Correct — cholesterol packs near saturated fatty acid chains and stiffens the membrane in that context."},
+  {text:"Scramblase requires ATP to move lipids between leaflets.",ans:false,ex:"Scramblase does NOT require ATP — it's activated by intracellular calcium. Flippase and floppase are the ATP-dependent ones."},
+  {text:"Sphingolipids use sphingosine instead of glycerol as their structural backbone.",ans:true,ex:"Correct — sphingosine replaces the glycerol found in phosphoglycerides."},
+  {text:"Caveolae are a specialized type of lipid raft associated with the protein caveolin.",ans:true,ex:"Correct."},
+  {text:"A single membrane protein can only ever belong to one functional category (receptor, transporter, or adhesion molecule).",ans:false,ex:"A protein can fit more than one category — e.g., integrins both adhere to the ECM and trigger signaling."}
+]}
+];
+
+const TOTAL=Q.length;
+let done=0,correct=0,results={},prevMissed=new Set(),lastMissed=new Set();
+
+// PROGRESS PERSISTENCE (silent, device-local via localStorage)
+const PKEY='mem-struct-guide:v1';
+function saveProgress(){try{localStorage.setItem(PKEY,JSON.stringify({total:TOTAL,done,correct,results,lastMissed:[...lastMissed]}))}catch(e){}}
+function loadProgress(){try{const r=localStorage.getItem(PKEY);return r?JSON.parse(r):null}catch(e){return null}}
+function clearProgress(){try{localStorage.removeItem(PKEY)}catch(e){}}
+
+// INIT
+function initModule(){prevMissed.clear();buildModule()}
+function restartMod(){done=0;correct=0;results={};prevMissed=new Set(lastMissed);clearProgress();document.getElementById('cpContainer').innerHTML='';document.getElementById('scoreCard').style.display='none';updateProg();buildModule()}
+function restartFresh(){lastMissed=new Set();restartMod()}
+function updateProg(){const p=Math.round(done/TOTAL*100);document.getElementById('pf').style.width=p+'%';document.getElementById('progText').textContent=done+' of '+TOTAL+' checkpoints complete';document.getElementById('progPct').textContent=p+'%'}
+
+// RESUME
+function showResumeBanner(saved){const main=document.querySelector('.main');const b=document.createElement('div');b.className='resume-banner';b.innerHTML=`<div><strong>Welcome back.</strong> You'd finished ${saved.done} of ${saved.total} checkpoints on this device. Pick up where you left off?</div><div class="resume-actions"><button class="btn btn-primary" id="resumeYes">Resume</button><button class="btn btn-secondary" id="resumeNo">Start over</button></div>`;main.insertBefore(b,main.firstChild);document.getElementById('resumeYes').onclick=()=>{b.remove();restoreProgress(saved)};document.getElementById('resumeNo').onclick=()=>{b.remove();clearProgress();initModule()}}
+function restoreProgress(saved){results={...saved.results};done=saved.done;correct=saved.correct;lastMissed=new Set(saved.lastMissed||[]);prevMissed.clear();buildModule();document.querySelectorAll('#cpContainer .cp').forEach(el=>el.classList.remove('open','active-cp'));Q.forEach(q=>{if(results.hasOwnProperty(q.id)){const el=document.getElementById('cp'+q.id);if(!el)return;const ok=results[q.id];el.classList.add(ok?'done':'done-bad');const body=el.querySelector('.cp-body');if(body)body.innerHTML=`<hr><div class="fb ${ok?'correct':'incorrect'} show" style="margin-top:0">${ok?'<strong>✓ Completed</strong> — you answered this one already.':'<strong>✗ Completed</strong> — you missed this; it comes up first if you retry.'}</div>`}});const next=Q.find(q=>!results.hasOwnProperty(q.id));if(next){const ne=document.getElementById('cp'+next.id);ne.classList.add('open','active-cp');ne.scrollIntoView({behavior:'smooth',block:'center'})}updateProg()}
+
+// END-OF-GUIDE SUMMARY
+function renderSummary(){const pct=Math.round(correct/TOTAL*100);const seen={},secs=[];Q.forEach(q=>{if(!seen[q.sec]){seen[q.sec]=1;secs.push(q.sec)}});const secHtml=secs.map(sec=>{const items=Q.filter(q=>q.sec===sec);const c=items.filter(q=>results[q.id]).length,t=items.length,p=Math.round(c/t*100),cls=p>=75?'good':p>=50?'mid':'bad';return `<div class="sum-sec"><div class="sum-sec-top"><span>${sec}</span><span class="sum-sec-score">${c}/${t}</span></div><div class="sum-bar"><div class="sum-bar-fill ${cls}" style="width:${p}%"></div></div></div>`}).join('');const missed=Q.filter(q=>results[q.id]===false);let missHtml;if(!missed.length){missHtml=`<div class="sum-allright">Perfect — you didn't miss anything. 🎯</div>`}else{missHtml=missed.map(q=>{let key;if(q.type==='fill')key=q.answer;else if(q.type==='mc'||q.type==='drill')key=q.fb;else key='Revisit the True/False statements and re-check any you flagged wrong.';return `<div class="sum-miss"><div class="sum-miss-title">${q.id}. ${q.title}</div><div class="sum-miss-key">${key}</div></div>`}).join('')}document.getElementById('summaryBody').innerHTML=`<div class="sum-score">${correct}<span>/${TOTAL}</span></div><div class="sum-pct">${pct}% correct</div><div class="sum-heading">How you did by topic</div>${secHtml}<div class="sum-heading">${missed.length?('Review these '+missed.length+' item'+(missed.length>1?'s':'')):'Nothing to review'}</div>${missHtml}`}
+
+// BUILD
+function buildModule(){const box=document.getElementById('cpContainer');box.innerHTML='';
+  // If there are previously missed items, show them first with a divider
+  if(prevMissed.size>0){const d=document.createElement('div');d.className='section-divider';d.innerHTML=`<span class="section-badge" style="background:var(--red-light);color:var(--red)">Priority Review</span> Items you missed last time`;box.appendChild(d);
+    Q.filter(q=>prevMissed.has(q.id)).forEach(q=>box.appendChild(buildCP(q,true)));
+    const d2=document.createElement('div');d2.className='section-divider';d2.innerHTML=`<span class="section-badge" style="background:var(--green-light);color:var(--green)">Remaining</span> Complete all checkpoints`;box.appendChild(d2);
+    Q.filter(q=>!prevMissed.has(q.id)).forEach(q=>box.appendChild(buildCP(q,false)));
+  } else {
+    let curSec='';
+    Q.forEach(q=>{if(q.sec!==curSec){curSec=q.sec;const d=document.createElement('div');d.className='section-divider';d.innerHTML=`<span class="section-badge ${q.stag}">${curSec}</span>`;box.appendChild(d)}box.appendChild(buildCP(q,false))});
+  }
+  // Open first checkpoint
+  const first=box.querySelector('.cp');if(first){first.classList.add('open','active-cp')}
+}
+
+function buildCP(q,isReview){
+  const d=document.createElement('div');d.className='cp';d.id='cp'+q.id;
+  const reviewTag=isReview?'<span class="review-tag">Review</span>':'';
+  d.innerHTML=`<div class="cp-head" onclick="tog(${q.id})"><div class="cp-icon">${q.id}</div><div class="cp-meta"><div class="cp-slides"><span class="lo-tag">${q.lo}</span>${q.hy?'<span class="badge-hy">High Yield</span>':''}${reviewTag}</div><div class="cp-title">${q.title}</div></div><div class="chevron">▼</div></div><div class="cp-body"><hr>${buildBody(q)}<div class="fb" id="fb${q.id}"></div><div id="cont${q.id}"></div></div>`;
+  return d;
+}
+
+function buildBody(q){
+  let h="";
+  if(q.formula)h+=`<div class="formula-box">${q.formula}</div>`;
+  // Predict-before-peek wrapper for MC and drill types
+  const needsPredict=q.predict&&(q.type==='mc'||q.type==='drill');
+  if(needsPredict){
+    h+=`<div class="predict-box" id="pred${q.id}"><p>Before seeing the options, write what you think the answer is:</p><textarea class="predict-input" placeholder="My prediction..."></textarea><button class="predict-reveal-btn" onclick="revealQ(${q.id})">Show Question →</button></div>`;
+    h+=`<div class="question-area" id="qa${q.id}">`;
+  }
+  // Question content
+  if(q.type==='mc'){h+=`<div class="q-type">Multiple Choice</div><div class="q-prompt">${q.q}</div><div class="mc-opts">${q.opts.map((o,i)=>`<div class="mc-opt" id="o${q.id}_${i}" onclick="doMC(${q.id},${i})"><div class="mc-dot"></div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`}
+  else if(q.type==='calc'){h+=`<div class="q-type calc">Calculation</div><div class="q-prompt">${q.q}</div><div class="calc-row"><input type="number" step="0.01" class="calc-input" id="ci${q.id}" placeholder="?"><span class="calc-unit">${q.unit}</span><button class="btn btn-secondary" id="cb${q.id}" onclick="doCalc(${q.id})">Check</button></div>`}
+  else if(q.type==='fill'){h+=`<div class="q-type concept">Free Recall</div><div class="q-prompt">${q.q}</div><textarea class="fill-area" id="fi${q.id}" placeholder="Type your answer..."></textarea><div class="btn-row"><button class="btn btn-secondary" id="rv${q.id}" onclick="doFill(${q.id})">Reveal Answer</button></div><div class="model-answer" id="ma${q.id}"><strong>Model Answer:</strong> ${q.answer}</div><div class="self-rate" id="sr${q.id}"><span>How did you do?</span><div style="display:flex;gap:5px;margin-top:4px"><button class="btn btn-primary" onclick="selfRate(${q.id},true)">✓ Got it</button><button class="btn" style="background:var(--red);color:#fff" onclick="selfRate(${q.id},false)">✗ Missed it</button></div></div>`}
+  else if(q.type==='drill')h+=buildDrill(q);
+  else if(q.type==='tf')h+=buildTF(q);
+  if(needsPredict)h+=`</div>`;
+  return h;
+}
+
+function revealQ(id){document.getElementById('pred'+id).style.display='none';document.getElementById('qa'+id).classList.add('revealed')}
+
+function buildDrill(q){
+  // Use TABLE layout instead of grid for proper stacking
+  if(q.drillType==='pressure'){let h=`<div class="q-type scenario">Pressure Drill</div><div class="q-prompt">${q.q}</div><table class="drill-table"><thead><tr><th>Variable</th><th>Inspiration</th><th>Expiration</th></tr></thead><tbody>`;q.rows.forEach((r,i)=>{h+=`<tr><td>${r.label}</td><td><select class="drill-sel" id="pi${q.id}_${i}">${q.iOpts.map(o=>`<option value="${o}">${q.iLbls[o]}</option>`).join('')}</select></td><td><select class="drill-sel" id="pe${q.id}_${i}">${q.eOpts.map(o=>`<option value="${o}">${q.eLbls[o]}</option>`).join('')}</select></td></tr>`});return h+`</tbody></table><div class="btn-row"><button class="btn btn-secondary" id="dc${q.id}" onclick="doPressure(${q.id})">Check All</button></div>`}
+  if(q.drillType==='compliance'){const h0=(q.headers&&q.headers[0])||'Condition',h1=(q.headers&&q.headers[1])||'Compliance';let h=`<div class="q-type calc">${q.dqLabel||'Classification Drill'}</div><div class="q-prompt">${q.q}</div><table class="drill-table"><thead><tr><th>${h0}</th><th>${h1}</th></tr></thead><tbody>`;q.rows.forEach((r,i)=>{h+=`<tr><td>${r.label}</td><td><select class="drill-sel" id="cc${q.id}_${i}">${q.cOpts.map(o=>`<option value="${o}">${q.cLbls[o]}</option>`).join('')}</select></td></tr>`});return h+`</tbody></table><div class="btn-row"><button class="btn btn-secondary" id="dc${q.id}" onclick="doComp(${q.id})">Check All</button></div>`}
+  if(q.drillType==='pft'){const h0=(q.headers&&q.headers[0])||'Parameter',h1=(q.headers&&q.headers[1])||'Change';let h=`<div class="q-type scenario">${q.dqLabel||'Classification Drill'}</div><div class="q-prompt">${q.q}</div><table class="drill-table"><thead><tr><th>${h0}</th><th>${h1}</th></tr></thead><tbody>`;q.rows.forEach((r,i)=>{h+=`<tr><td>${r.label}</td><td><select class="drill-sel" id="pf${q.id}_${i}">${q.pOpts.map(o=>`<option value="${o}">${q.pLbls[o]}</option>`).join('')}</select></td></tr>`});return h+`</tbody></table><div class="btn-row"><button class="btn btn-secondary" id="dc${q.id}" onclick="doPFT(${q.id})">Check All</button></div>`}
+  if(q.drillType==='disease'){let h=`<div class="q-type scenario">Disease Classification</div><div class="q-prompt">${q.q}</div><table class="drill-table"><thead><tr><th>Disease</th><th>Type</th><th>FEV₁/FVC</th></tr></thead><tbody>`;q.rows.forEach((r,i)=>{h+=`<tr><td>${r.label}</td><td><select class="drill-sel" id="dt${q.id}_${i}">${q.tOpts.map(o=>`<option value="${o}">${o[0].toUpperCase()+o.slice(1)}</option>`).join('')}</select></td><td><select class="drill-sel" id="dr${q.id}_${i}">${q.rOpts.map(o=>`<option value="${o}">${o[0].toUpperCase()+o.slice(1)}</option>`).join('')}</select></td></tr>`});return h+`</tbody></table><div class="btn-row"><button class="btn btn-secondary" id="dc${q.id}" onclick="doDis(${q.id})">Check All</button></div>`}
+  return''}
+
+function buildTF(q){let h=`<div class="q-type">True / False Rapid Fire</div><div class="q-prompt">${q.q}</div>`;q.items.forEach((it,i)=>{h+=`<div class="tf-row" id="tf${q.id}_${i}"><div class="tf-text">${it.text}</div><div class="tf-btns"><button class="tf-btn" id="tft${q.id}_${i}" onclick="doTFI(${q.id},${i},true)">T</button><button class="tf-btn" id="tff${q.id}_${i}" onclick="doTFI(${q.id},${i},false)">F</button></div></div>`});return h+`<div class="btn-row"><button class="btn btn-secondary" id="dc${q.id}" onclick="scoreTF(${q.id})">Score All</button></div>`}
+
+// HANDLERS
+function tog(id){const el=document.getElementById('cp'+id);el.classList.toggle('open');if(el.classList.contains('open'))el.classList.add('active-cp')}
+
+function doMC(id,ch){const q=Q.find(x=>x.id===id);if(document.getElementById(`o${id}_0`).classList.contains('locked'))return;const ok=ch===q.correct;q.opts.forEach((_,i)=>{const e=document.getElementById(`o${id}_${i}`);e.classList.add('locked');if(i===ch&&ok)e.classList.add('is-correct');else if(i===ch)e.classList.add('is-wrong');if(i===q.correct&&!ok)e.classList.add('is-correct')});finish(id,ok,q.fb)}
+
+function doCalc(id){const q=Q.find(x=>x.id===id);const v=parseFloat(document.getElementById('ci'+id).value);if(isNaN(v))return;const ok=Math.abs(v-q.ans)<=q.tol;document.getElementById('ci'+id).disabled=true;document.getElementById('cb'+id).disabled=true;document.getElementById('ci'+id).style.borderColor=ok?'var(--green)':'var(--red)';finish(id,ok,q.fb+(ok?'':` Correct: ${q.ans} ${q.unit}.`))}
+
+function doFill(id){document.getElementById('ma'+id).classList.add('show');document.getElementById('sr'+id).classList.add('show');document.getElementById('rv'+id).disabled=true;document.getElementById('fi'+id).disabled=true}
+function selfRate(id,ok){document.getElementById('sr'+id).classList.remove('show');finish(id,ok,ok?"Solid recall!":"Review the model answer and revisit in the study guide.")}
+
+function doPressure(id){const q=Q.find(x=>x.id===id);let c=0;q.rows.forEach((r,i)=>{const si=document.getElementById(`pi${id}_${i}`),se=document.getElementById(`pe${id}_${i}`);si.disabled=true;se.disabled=true;si.className=`drill-sel ${si.value===r.iA?'ok':'no'}`;se.className=`drill-sel ${se.value===r.eA?'ok':'no'}`;if(si.value===r.iA&&se.value===r.eA)c++});document.getElementById('dc'+id).disabled=true;finish(id,c===q.rows.length,`${c}/${q.rows.length} rows. ${q.fb}`,c>0&&c<q.rows.length)}
+
+function doComp(id){const q=Q.find(x=>x.id===id);let c=0;q.rows.forEach((r,i)=>{const s=document.getElementById(`cc${id}_${i}`);s.disabled=true;s.className=`drill-sel ${s.value===r.ans?'ok':'no'}`;if(s.value===r.ans)c++});document.getElementById('dc'+id).disabled=true;finish(id,c===q.rows.length,`${c}/${q.rows.length}. ${q.fb}`,c>0&&c<q.rows.length)}
+
+function doPFT(id){const q=Q.find(x=>x.id===id);let c=0;q.rows.forEach((r,i)=>{const s=document.getElementById(`pf${id}_${i}`);s.disabled=true;s.className=`drill-sel ${s.value===r.ans?'ok':'no'}`;if(s.value===r.ans)c++});document.getElementById('dc'+id).disabled=true;finish(id,c===q.rows.length,`${c}/${q.rows.length}. ${q.fb}`,c>0&&c<q.rows.length)}
+
+function doDis(id){const q=Q.find(x=>x.id===id);let c=0;q.rows.forEach((r,i)=>{const st=document.getElementById(`dt${id}_${i}`),sr=document.getElementById(`dr${id}_${i}`);st.disabled=true;sr.disabled=true;st.className=`drill-sel ${st.value===r.tA?'ok':'no'}`;sr.className=`drill-sel ${sr.value===r.rA?'ok':'no'}`;if(st.value===r.tA&&sr.value===r.rA)c++});document.getElementById('dc'+id).disabled=true;finish(id,c===q.rows.length,`${c}/${q.rows.length}. ${q.fb}`,c>0&&c<q.rows.length)}
+
+const tfA={};
+function doTFI(qid,idx,val){if(!tfA[qid])tfA[qid]={};tfA[qid][idx]=val;const t=document.getElementById(`tft${qid}_${idx}`),f=document.getElementById(`tff${qid}_${idx}`);t.style.borderColor=val?'var(--teal)':'';t.style.background=val?'var(--teal-light)':'';f.style.borderColor=!val?'var(--teal)':'';f.style.background=!val?'var(--teal-light)':''}
+function scoreTF(id){const q=Q.find(x=>x.id===id);if(!tfA[id]||Object.keys(tfA[id]).length<q.items.length){alert('Answer all items first.');return}let c=0;q.items.forEach((it,i)=>{const ch=tfA[id][i],ok=ch===it.ans;const t=document.getElementById(`tft${id}_${i}`),f=document.getElementById(`tff${id}_${i}`);t.disabled=true;f.disabled=true;if(ok)(ch?t:f).className='tf-btn ok';else{(ch?t:f).className='tf-btn no';(!ch?t:f).className='tf-btn ok';const row=document.getElementById(`tf${id}_${i}`);const exp=document.createElement('div');exp.style.cssText='font-size:.78rem;color:var(--red);margin-top:4px;padding-top:4px;border-top:1px solid var(--red-light)';exp.textContent=it.ex;row.appendChild(exp)}if(ok)c++});document.getElementById('dc'+id).disabled=true;finish(id,c===q.items.length,`${c}/${q.items.length} correct.`,c>0&&c<q.items.length)}
+
+function finish(id,ok,text,partial=false){
+  const fb=document.getElementById('fb'+id);
+  if(partial){fb.className='fb partial show';fb.innerHTML=`<strong>Partially correct.</strong> ${text}`}
+  else if(ok){fb.className='fb correct show';fb.innerHTML=`<strong>✓ Correct!</strong> ${text}`}
+  else{fb.className='fb incorrect show';fb.innerHTML=`<strong>✗ Not quite.</strong> ${text}`}
+  const el=document.getElementById('cp'+id);el.classList.add(ok||partial?'done':'done-bad');el.classList.remove('active-cp');
+  results[id]=ok||partial;if(ok||partial)correct++;done++;updateProg();
+  if(done===TOTAL){lastMissed=new Set(Q.filter(q=>results[q.id]===false).map(q=>q.id));saveProgress();setTimeout(()=>{const sc=document.getElementById('scoreCard');renderSummary();sc.style.display='block';sc.scrollIntoView({behavior:'smooth'})},500)}
+  else{saveProgress();const next=Q.find(d=>!results.hasOwnProperty(d.id));
+    if(next){const contDiv=document.getElementById('cont'+id);contDiv.innerHTML=`<div style="margin-top:.75rem"><button class="btn btn-primary" onclick="goNext(${next.id})">Continue to Next →</button></div>`}}
+}
+
+function goNext(nid){document.querySelectorAll('.cp').forEach(e=>{e.classList.remove('open','active-cp')});const ne=document.getElementById('cp'+nid);ne.classList.add('open','active-cp');ne.scrollIntoView({behavior:'smooth',block:'start'})}
+
+// Launch — silently resume device-local progress if present, else start fresh
+(function(){const saved=loadProgress();if(saved&&saved.total===TOTAL&&saved.done>0&&saved.done<TOTAL){showResumeBanner(saved)}else{if(saved)clearProgress();initModule()}})();
+</script>
+</body>
+</html>
